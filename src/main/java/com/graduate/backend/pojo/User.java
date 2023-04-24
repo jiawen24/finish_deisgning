@@ -11,7 +11,8 @@ import lombok.*;
 //用户实体类
 public class User {
     private Integer id; //id
-    private String name; //名字
+    private String username; //名字
+    private String password;//密码
     private String school; //学校
     private String major; //专业
 }

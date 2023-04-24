@@ -9,4 +9,24 @@
         select * from user where id = #{id}
     </select>
 
+    <select id="getUserByName" resultType="com.graduate.backend.pojo.User">
+        select * from user where username = #{username}
+    </select>
+
+    <select id="getUserByNameAndPass" resultType="com.graduate.backend.pojo.User">
+        select * from user where username = #{username} and password = #{password}
+    </select>
+
+    <insert id="insert" >
+        insert into user ( username, password) value (#{username},#{password})
+    </insert>
+
+    <update id="update">
+        update user set username = #{username}, password = #{password} ,school = #{school}, major = #{major} where id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete from user where id = #{id}
+    </delete>
+    
 </mapper>
