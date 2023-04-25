@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,6 +49,12 @@ public class UserController {
     @RequestMapping(value = "user/getInfo",method = RequestMethod.GET)
     public User getUserInfo(HttpServletRequest request){
         return userService.getInfo(request);
+    }
+
+    @RequestMapping(value = "user/uploadAvatar",method = RequestMethod.POST)
+    public String uploadAvatar(HttpServletRequest request,@RequestParam("avatar") MultipartFile file)
+    {
+        return userService.uploadAvatar(request, file);
     }
 
 }

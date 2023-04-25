@@ -39,7 +39,7 @@ public class TokenFilter implements Filter {
         String url =  ((HttpServletRequest)servletRequest).getRequestURI();
         if(url != null){
             //直接放行
-            if(notFilter.contains(url)||url.contains("/static/file")){
+            if(notFilter.contains(url)||url.contains("/file")){
                 filterChain.doFilter(servletRequest,servletResponse);
                 return;
             }else{

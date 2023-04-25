@@ -1,5 +1,6 @@
 package com.graduate.backend.service.impl;
 
+import com.graduate.backend.config.FileConfig;
 import com.graduate.backend.mapper.UserMapper;
 import com.graduate.backend.pojo.User;
 import com.graduate.backend.service.UserService;
@@ -7,8 +8,11 @@ import com.graduate.backend.util.TokenUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,7 +128,7 @@ public class UserServiceImpl implements UserService {
         if(password==null)password = user.getPassword();
         if(school ==null) school = user.getSchool();
         if(major ==null) major = user.getMajor();
-        System.out.println(id+":"+username+":"+password+":"+school+":"+major);
+        //插入数据库
         int updateRes = mapper.update(id,username,password,school,major);
         if(updateRes>0){
             res.put(STATUS,STATUS_SUCCESS);
@@ -142,4 +146,30 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public String uploadAvatar(HttpServletRequest request, MultipartFile file) {
+        Map<String,String> res = new HashMap<>();
+        if(file.isEmpty()){
+            res.put(STATUS,STATUS_FAILED);
+            res.put(MSG,"上传文件为空");
+            return new JSONObject(res).toString();
+        }
+        try{
+            int id = Integer.valueOf(request.getHeader("id"));
+            //保存到本地文件
+            File parent = new File(FileConfig.location);
+            String parentPath = parent.getCanonicalPath();
+            String saveName = id+"-"+file.getOriginalFilename(); //保存路径为用户"id-file.name"
+            file.transferTo(new File(parentPath+"/"+saveName));
+            //插入数据库
+            mapper.updateAvatar(id,saveName);
+            res.put(STATUS,STATUS_SUCCESS);
+            res.put(MSG,"上传成功");
+            return new JSONObject(res).toString();
+        }catch (IOException e){
+            res.put(STATUS,STATUS_FAILED);
+            res.put(MSG,"上传失败");
+            return new JSONObject(res).toString();
+        }
+    }
 }

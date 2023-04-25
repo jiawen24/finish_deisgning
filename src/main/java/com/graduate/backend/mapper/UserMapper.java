@@ -26,4 +26,7 @@ public interface UserMapper {
 
 //    修改用户信息
     public Integer update(@Param("id") int id,@Param("username")String username,@Param("password")String password,@Param("school")String school,@Param("major")String major);
+
+//    更新用户头像
+    public Integer updateAvatar(@Param("id") int id,@Param("avatar")String avatar);
 }

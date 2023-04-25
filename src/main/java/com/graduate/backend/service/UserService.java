@@ -3,8 +3,10 @@ package com.graduate.backend.service;
 import com.graduate.backend.pojo.User;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 //用户接口类
 public interface UserService {
@@ -27,5 +29,6 @@ public interface UserService {
     // 修改用户信息
     public String update(HttpServletRequest request,String username,String password,String school,String major);
 
-
+    //上传头像
+    public String uploadAvatar(HttpServletRequest request, MultipartFile file);
 }
