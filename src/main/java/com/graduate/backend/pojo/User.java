@@ -15,4 +15,5 @@ public class User {
     private String password;//密码
     private String school; //学校
     private String major; //专业
+    private String avatar;//头像路径
 }
