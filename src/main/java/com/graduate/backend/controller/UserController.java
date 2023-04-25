@@ -45,4 +45,9 @@ public class UserController {
         return userService.update(request, username, password, school, major);
     }
 
+    @RequestMapping(value = "user/getInfo",method = RequestMethod.GET)
+    public User getUserInfo(HttpServletRequest request){
+        return userService.getInfo(request);
+    }
+
 }

@@ -21,6 +21,9 @@ public interface UserService {
     //验证token
     public String checkToken();
 
+    //获取用户信息
+    public User getInfo(HttpServletRequest request);
+
     // 修改用户信息
     public String update(HttpServletRequest request,String username,String password,String school,String major);
 

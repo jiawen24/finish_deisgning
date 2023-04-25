@@ -103,6 +103,8 @@ public class UserServiceImpl implements UserService {
         return new JSONObject(res).toString();
     }
 
+
+
     /*
      * 修改用户数据
      * return { "status":"success/failed"}
@@ -130,6 +132,14 @@ public class UserServiceImpl implements UserService {
             res.put(STATUS,STATUS_FAILED);
         }
         return new JSONObject(res).toString();
+    }
+
+    //通过token获取用户信息
+    @Override
+    public User getInfo(HttpServletRequest request) {
+        int id = Integer.valueOf(request.getHeader("id"));
+        User user = mapper.getUserById(id);
+        return user;
     }
 
 }
