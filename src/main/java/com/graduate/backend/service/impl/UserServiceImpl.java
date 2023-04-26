@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
             //保存到本地文件
             File parent = new File(FileConfig.location);
             String parentPath = parent.getCanonicalPath();
-            String saveName = id+"-"+file.getOriginalFilename(); //保存路径为用户"id-file.name"
+            String saveName = id+"-avatar.jpg"; //保存路径为用户"id-avatar"
             file.transferTo(new File(parentPath+"/"+saveName));
             //插入数据库
             mapper.updateAvatar(id,saveName);
