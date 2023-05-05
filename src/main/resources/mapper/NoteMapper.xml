@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.graduate.backend.mapper.NoteMapper">
+
+    <select id="getNotes" resultType="com.graduate.backend.pojo.Note">
+        select * from note where user_id = #{uid} order by update_time desc;
+    </select>
+
+    <update id="update">
+        update note set title = #{title} ,content = #{content},update_time = now() where note_id = #{nid} and user_id = #{uid}
+    </update>
+
+    <insert id="insert" >
+        insert into note (note_id, user_id, title, content, update_time) value (null,#{uid},#{title},#{content},now())
+    </insert>
+
+    <delete id="delete">
+        delete from note where user_id = #{uid} and note_id = #{nid}
+    </delete>
+
+</mapper>
