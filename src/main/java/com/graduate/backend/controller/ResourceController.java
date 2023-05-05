@@ -1,6 +1,7 @@
 package com.graduate.backend.controller;
 
 import com.graduate.backend.pojo.Resource;
+import com.graduate.backend.pojo.Response;
 import com.graduate.backend.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,14 +26,14 @@ public class ResourceController {
 
     //上传文件
     @RequestMapping(value = "resource/upload",method = RequestMethod.POST)
-    public String uploadFile(HttpServletRequest request,@RequestParam("file") MultipartFile file)
+    public Response uploadFile(HttpServletRequest request, @RequestParam("file") MultipartFile file)
     {
         return service.uploadFile(request,file);
     }
 
     //删除文件
     @RequestMapping(value = "resource/delete",method = RequestMethod.POST)
-    public String deleteFile(HttpServletRequest request,@RequestParam("fid") int fid){
+    public Response deleteFile(HttpServletRequest request,@RequestParam("fid") int fid){
         return service.deleteFile(request,fid);
     }
 

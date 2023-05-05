@@ -4,6 +4,7 @@ import com.graduate.backend.mapper.NoteMapper;
 import com.graduate.backend.pojo.Note;
 import com.graduate.backend.pojo.Response;
 import com.graduate.backend.service.NoteService;
+import com.graduate.backend.util.StrUtil;
 import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,26 +21,19 @@ public class NoteServiceImpl implements NoteService {
     @Autowired
     private NoteMapper mapper;
 
-    //获取uid
-    private int getId(HttpServletRequest request){
-        String id = request.getHeader("id");
-        Pattern pattern = Pattern.compile("[0-9]*");
-        if(pattern.matcher(id).matches()){
-            return Integer.valueOf(id);
-        }else return -1;
-    }
+
 
     //返回note列表
     @Override
     public List<Note> getNotes(HttpServletRequest request) {
-        int uid = getId(request);
+        int uid = StrUtil.getId(request);
         return mapper.getNotes(uid);
     }
 
     //返回response
     @Override
     public Response addNote(HttpServletRequest request, String title, String content) {
-        int uid = getId(request);
+        int uid = StrUtil.getId(request);
         Integer insert = mapper.insert(uid,title,content);
         Response res = new Response();
         if(insert >0){
@@ -56,7 +50,7 @@ public class NoteServiceImpl implements NoteService {
     //返回response
     @Override
     public Response deleteNote(HttpServletRequest request, int nid) {
-        int uid = getId(request);
+        int uid = StrUtil.getId(request);
         Integer insert = mapper.delete(uid,nid);
         Response res = new Response();
         if(insert >0){
@@ -71,7 +65,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Response updateNote(HttpServletRequest request, int nid, String title, String content) {
-        int uid = getId(request);
+        int uid = StrUtil.getId(request);
         Integer insert = mapper.update(uid,nid,title,content);
         Response res = new Response();
         if(insert >0){

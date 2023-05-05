@@ -3,7 +3,9 @@ package com.graduate.backend.service.impl;
 import com.graduate.backend.config.FileConfig;
 import com.graduate.backend.mapper.ResourceMapper;
 import com.graduate.backend.pojo.Resource;
+import com.graduate.backend.pojo.Response;
 import com.graduate.backend.service.ResourceService;
+import com.graduate.backend.util.StrUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,7 @@ import java.util.Map;
 
 @Service
 public class ResourceServiceImpl implements ResourceService {
-    private final String STATUS_FAILED = "failed";
-    private final String STATUS_SUCCESS = "success";
-    private final String STATUS = "status";
-    private final String MSG = "msg";
+
 
     @Autowired
     private ResourceMapper mapper;
@@ -32,7 +31,7 @@ public class ResourceServiceImpl implements ResourceService {
      * */
     @Override
     public List<Resource> getFiles(HttpServletRequest request) {
-        int uid = Integer.valueOf(request.getHeader("id"));
+        int uid = StrUtil.getId(request);
         return mapper.getFiles(uid);
     }
 
@@ -41,16 +40,16 @@ public class ResourceServiceImpl implements ResourceService {
      * return { "status":"success/failed","msg":"上传成功/失败"}
      * */
     @Override
-    public String uploadFile(HttpServletRequest request, MultipartFile file) {
-        Map<String,String> res = new HashMap<>();
+    public Response uploadFile(HttpServletRequest request, MultipartFile file) {
+        Response res = new Response();
         if(file.isEmpty()){
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"上传文件为空");
-            return new JSONObject(res).toString();
+            res.setFailed();
+            res.setMsg("上传文件为空");
+            return res;
         }
         try{
             //保存到本地文件
-            int uid = Integer.valueOf(request.getHeader("id"));
+            int uid = StrUtil.getId(request);
             File parent = new File(FileConfig.location);
             String parentPath = parent.getCanonicalPath();
             String fileName = file.getOriginalFilename();
@@ -58,13 +57,13 @@ public class ResourceServiceImpl implements ResourceService {
             file.transferTo(new File(parentPath+"/"+savePath));
             //插入数据库
             mapper.insert(uid,fileName,savePath);
-            res.put(STATUS,STATUS_SUCCESS);
-            res.put(MSG,"上传成功");
-            return new JSONObject(res).toString();
+            res.setSuccess();
+            res.setMsg("上传成功");
+            return res;
         }catch (IOException e){
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"上传失败");
-            return new JSONObject(res).toString();
+            res.setFailed();
+            res.setMsg("上传失败");
+            return res;
         }
     }
 
@@ -73,10 +72,9 @@ public class ResourceServiceImpl implements ResourceService {
      * return { "status":"success/failed","msg":"unknown"}
      * */
     @Override
-    public String deleteFile(HttpServletRequest request, int fid) {
-        int uid = Integer.valueOf(request.getHeader("id"));
-        Map<String,String> res = new HashMap<>();
-
+    public Response deleteFile(HttpServletRequest request, int fid) {
+        int uid = StrUtil.getId(request);
+        Response res = new Response();
         try {
             Resource resource = mapper.getFile(uid,fid);
             if(resource!=null){
@@ -92,12 +90,12 @@ public class ResourceServiceImpl implements ResourceService {
         int insertRes = mapper.delete(uid,fid);
 
         if(insertRes>0){ //删除成功
-            res.put(STATUS,STATUS_SUCCESS);
-            res.put(MSG,STATUS_SUCCESS);
+            res.setSuccess();
+            res.setMsg("删除成功");
         }else{ //删除失败
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"unknown");
+            res.setFailed();
+            res.setMsg("删除失败");
         }
-        return new JSONObject(res).toString();
+        return res;
     }
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.ConstructorArgs;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//返回结果类
 public class Response {
     private String status; //请求结果
     private String msg; //信息
