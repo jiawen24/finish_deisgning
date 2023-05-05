@@ -1,5 +1,6 @@
 package com.graduate.backend.service;
 
+import com.graduate.backend.pojo.Response;
 import com.graduate.backend.pojo.User;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
@@ -15,20 +16,20 @@ public interface UserService {
     public String login(String name,String password);
 
     // 注册
-    public String register(String name,String password);
+    public Response register(String name,String password);
 
     //登出
     public String logout(HttpServletRequest request);
 
     //验证token
-    public String checkToken();
+    public Response checkToken();
 
     //获取用户信息
     public User getInfo(HttpServletRequest request);
 
     // 修改用户信息
-    public String update(HttpServletRequest request,String username,String password,String school,String major);
+    public Response update(HttpServletRequest request,String username,String password,String school,String major);
 
     //上传头像
-    public String uploadAvatar(HttpServletRequest request, MultipartFile file);
+    public Response uploadAvatar(HttpServletRequest request, MultipartFile file);
 }

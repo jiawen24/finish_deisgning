@@ -1,6 +1,7 @@
 package com.graduate.backend.controller;
 
 import com.graduate.backend.mapper.UserMapper;
+import com.graduate.backend.pojo.Response;
 import com.graduate.backend.pojo.User;
 import com.graduate.backend.service.UserService;
 import com.graduate.backend.util.TokenUtil;
@@ -27,7 +28,7 @@ public class UserController {
 
     //注册
     @RequestMapping(value = "user/register",method = RequestMethod.POST)
-    public String register(@RequestParam("username")String username,@RequestParam("password")String password)
+    public Response register(@RequestParam("username")String username, @RequestParam("password")String password)
     {
         return userService.register(username,password);
     }
@@ -39,13 +40,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "user/check",method = RequestMethod.GET)
-    public String checkToken(){
+    public Response checkToken(){
         return userService.checkToken();
     }
 
     //编辑信息
     @RequestMapping(value = "user/update",method = RequestMethod.POST)
-    public String update(HttpServletRequest request, @RequestParam(value = "username",required = false)String username,@RequestParam(value = "password",required = false)String password
+    public Response update(HttpServletRequest request, @RequestParam(value = "username",required = false)String username,@RequestParam(value = "password",required = false)String password
          ,@RequestParam(value = "school",required = false)String school,@RequestParam(value = "major",required = false)String major){
         return userService.update(request, username, password, school, major);
     }
@@ -58,7 +59,7 @@ public class UserController {
 
     //上传头像
     @RequestMapping(value = "user/uploadAvatar",method = RequestMethod.POST)
-    public String uploadAvatar(HttpServletRequest request,@RequestParam("avatar") MultipartFile file)
+    public Response uploadAvatar(HttpServletRequest request,@RequestParam("avatar") MultipartFile file)
     {
         return userService.uploadAvatar(request, file);
     }

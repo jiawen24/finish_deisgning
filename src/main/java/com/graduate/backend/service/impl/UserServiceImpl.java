@@ -2,6 +2,7 @@ package com.graduate.backend.service.impl;
 
 import com.graduate.backend.config.FileConfig;
 import com.graduate.backend.mapper.UserMapper;
+import com.graduate.backend.pojo.Response;
 import com.graduate.backend.pojo.User;
 import com.graduate.backend.service.UserService;
 import com.graduate.backend.util.TokenUtil;
@@ -58,25 +59,26 @@ public class UserServiceImpl implements UserService {
      * return { "status":"success/failed","msg":"success/unknown/账户名已存在"}
      * */
     @Override
-    public String register(String name, String password) {
-        Map<String,String> res = new HashMap<>();
+    public Response register(String name, String password) {
+        Response res = new Response();
         User user = mapper.getUserByName(name);
         if(user==null){
             int insertRes = mapper.insert(name, password);
             if(insertRes>0){ //插入成功
-                res.put(STATUS,STATUS_SUCCESS);
-                res.put(MSG,STATUS_SUCCESS);
+                res.setSuccess();
+                res.setMsg("注册成功");
             }else{ //插入失败
-                res.put(STATUS,STATUS_FAILED);
-                res.put(MSG,"unknown");
+                res.setFailed();
+                res.setMsg("注册失败");
             }
         }else{ //用户名已存在
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"账户名已存在");
+            res.setFailed();
+            res.setMsg("账户名已存在");
         }
-        return new JSONObject(res).toString();
+        return res;
     }
 
+    //此方法返回过期token ->但是不如直接在前端把旧token删除就行了。
     /*
      * 登出 返回过期的token
      * return { "status":"success/failed","token":"new token"}
@@ -100,11 +102,11 @@ public class UserServiceImpl implements UserService {
      * return { "status":"success"}
      * */
     @Override
-    public String checkToken() {
+    public Response checkToken() {
         //若token验证失败，拦截器会返回401码和错误信息
-        Map<String,String> res = new HashMap<>();
-        res.put(STATUS,STATUS_SUCCESS);
-        return new JSONObject(res).toString();
+        Response res = new Response();
+        res.setSuccess();
+        return res;
     }
 
 
@@ -114,14 +116,14 @@ public class UserServiceImpl implements UserService {
      * return { "status":"success/failed"}
      * */
     @Override
-    public String update(HttpServletRequest request,String username,String password,String school,String major) {
-        Map<String,String> res = new HashMap<>();
+    public Response update(HttpServletRequest request,String username,String password,String school,String major) {
+        Response res = new Response();
         int id = Integer.valueOf(request.getHeader("id"));
         User existUser = mapper.getUserByName(username);
         if(existUser!=null){
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"用户名已存在");
-            return new JSONObject(res).toString();
+            res.setFailed();
+            res.setMsg("用户名已存在");
+            return res;
         }
         User user = mapper.getUserById(id);
         if(username==null)username = user.getUsername();
@@ -131,11 +133,13 @@ public class UserServiceImpl implements UserService {
         //插入数据库
         int updateRes = mapper.update(id,username,password,school,major);
         if(updateRes>0){
-            res.put(STATUS,STATUS_SUCCESS);
+            res.setSuccess();
+            res.setMsg("更新成功");
         }else{
-            res.put(STATUS,STATUS_FAILED);
+            res.setFailed();
+            res.setMsg("更新失败");
         }
-        return new JSONObject(res).toString();
+        return res;
     }
 
     //通过token获取用户信息
@@ -147,12 +151,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String uploadAvatar(HttpServletRequest request, MultipartFile file) {
-        Map<String,String> res = new HashMap<>();
+    public Response uploadAvatar(HttpServletRequest request, MultipartFile file) {
+        Response res = new Response();
         if(file.isEmpty()){
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"上传文件为空");
-            return new JSONObject(res).toString();
+            res.setFailed();
+            res.setMsg("上传文件为空");
+            return res;
         }
         try{
             int id = Integer.valueOf(request.getHeader("id"));
@@ -163,13 +167,13 @@ public class UserServiceImpl implements UserService {
             file.transferTo(new File(parentPath+"/"+saveName));
             //插入数据库
             mapper.updateAvatar(id,saveName);
-            res.put(STATUS,STATUS_SUCCESS);
-            res.put(MSG,"上传成功");
-            return new JSONObject(res).toString();
+            res.setSuccess();
+            res.setMsg("上传成功");
+            return res;
         }catch (IOException e){
-            res.put(STATUS,STATUS_FAILED);
-            res.put(MSG,"上传失败");
-            return new JSONObject(res).toString();
+            res.setFailed();
+            res.setMsg("上传失败");
+            return res;
         }
     }
 }
