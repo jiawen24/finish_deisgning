@@ -31,6 +31,7 @@ public class TokenFilter implements Filter {
         notFilter = new ArrayList<>();
         notFilter.add("/user/login");
         notFilter.add("/user/register");
+        notFilter.add("/hello");
     }
 
     @Override
