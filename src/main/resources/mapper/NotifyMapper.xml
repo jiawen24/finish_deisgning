@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.graduate.backend.mapper.NotifyMapper">
+
+    <select id="getAll" resultType="com.graduate.backend.pojo.Notification">
+        select * from notify where  user_id  = #{userId}
+    </select>
+
+    <select id="getNotifyByTime" resultType="com.graduate.backend.pojo.Notification">
+        select * from notify where  user_id  = #{userId} and start_time between #{start} and #{end}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="notification.notifyId" keyColumn="notify_id">
+        insert into notify (notify_id, user_id,type, title, description,start_time,end_time)
+        value (null,#{notification.userId},#{notification.type},#{notification.title},#{notification.description},#{notification.startTime},#{notification.endTime})
+    </insert>
+
+    <delete id="delete">
+        delete from notify where user_id  = #{userId } and notify_id = #{notifyId }
+    </delete>
+
+</mapper>
