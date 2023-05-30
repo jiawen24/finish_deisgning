@@ -103,8 +103,9 @@ public class CourseServiceImpl implements CourseService {
 
     //两个时间段是否有交集
     private boolean isTimeOverlap(int start1,int end1,int start2,int end2){
+        System.out.println(start1+" "+end1+" "+start2+" "+end2);
         return (start1>=start2 && start1<=end2)||
-                (end1>=start1 && end1<=end2)||
+                (end1>=start2 && end1<=end2)||
                 (start1<=start2&&end1>=end2);
     }
 
